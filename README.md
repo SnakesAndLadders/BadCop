@@ -10,6 +10,6 @@ Included is a python 3.6 script, if you use that you will have to install the fo
 
 Or you can run the binary in the "dist" folder.
 
-[Example 1](images/Screenshot_20180213_000129.png)
+[Example 1](images/Screenshot_20180213_000129.png) - profiling a [USB Rubber Duckie](https://hakshop.com/products/usb-rubber-ducky-deluxe)
 
-[Example 2](images/Screenshot_20180213_000306.png)
+[Example 2](images/Screenshot_20180213_000306.png) - profiling a [Bash Bunny](https://hakshop.com/products/bash-bunny)
