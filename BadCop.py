@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-import os
-import pickle
-import sys
+from os import remove
+from pickle import dump, load
+from sys import exit
 from wx import Dialog, StaticText, Button, EVT_CLOSE, EVT_BUTTON, BoxSizer, VERTICAL, App, Icon
 from wx import HORIZONTAL, ALL, CENTER, EXPAND, Size, BITMAP_TYPE_ICO
-import usb.core
+from usb.core import Configuration, find
 
 
 class MainDialog(Dialog):
@@ -36,14 +36,14 @@ class MainDialog(Dialog):
 
     def profileusb(self, other):
         del other
-        dev = usb.core.find(find_all=True)
+        dev = find(find_all=True)
         devices = []
         for cfg in dev:
             devclass = str(cfg.bDeviceClass)
             product = str(cfg.iProduct)
             vid = hex(cfg.idVendor)
             pid = hex(cfg.idProduct)
-            for line in usb.core.Configuration(usb.core.find(idVendor=cfg.idVendor)):
+            for line in Configuration(find(idVendor=cfg.idVendor)):
                 line = str(line)
                 linestrip = line.strip()
                 linesplit = linestrip.split('\n')
@@ -56,7 +56,7 @@ class MainDialog(Dialog):
                         intclass = e[1]
                         devices.append([devclass, product, vid, pid, intclass])
         with open('devices.pkl', 'wb') as f:
-            pickle.dump(devices, f)
+            dump(devices, f)
         self.profile.SetLabel("Done!")
         self.profile.Disable()
         self.test.Enable()
@@ -64,15 +64,15 @@ class MainDialog(Dialog):
     def testusb(self, other):
         del other
         with open('devices.pkl', 'rb') as f:
-            benchmark = pickle.load(f)
-        dev = usb.core.find(find_all=True)
+            benchmark = load(f)
+        dev = find(find_all=True)
         devices = []
         for cfg in dev:
             devclass = str(cfg.bDeviceClass)
             product = str(cfg.iProduct)
             vid = hex(cfg.idVendor)
             pid = hex(cfg.idProduct)
-            for line in usb.core.Configuration(usb.core.find(idVendor=cfg.idVendor)):
+            for line in Configuration(find(idVendor=cfg.idVendor)):
                 line = str(line)
                 linestrip = line.strip()
                 linesplit = linestrip.split('\n')
@@ -118,11 +118,11 @@ class MainDialog(Dialog):
     def onclose(self, event):
         del event
         try:
-            os.remove('devices.pkl')
+            remove('devices.pkl')
         except:
             print('file missing')
         self.Destroy()
-        sys.exit("Application Exited")
+        exit("Application Exited")
 
 
 app = App()
